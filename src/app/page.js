@@ -282,6 +282,8 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [tick, setTick] = useState(0);
   const [launchingMessage, setLaunchingMessage] = useState(null);
+const [evolutionText, setEvolutionText] = useState(null);
+const [shownEvolutionStages, setShownEvolutionStages] = useState({});
   const [groupInput, setGroupInput] = useState("");
   const [groupNotice, setGroupNotice] = useState("");
 
@@ -305,7 +307,30 @@ export default function Home() {
     const timeout = setTimeout(() => setGroupNotice(""), 1800);
     return () => clearTimeout(timeout);
   }, [groupNotice]);
+useEffect(() => {
+  const thresholds = [10, 50, 100, 500, 1000];
 
+  groups.forEach((group) => {
+    const count = (messages[group.name] || []).length;
+
+    thresholds.forEach((threshold) => {
+      const key = `${group.name}-${threshold}`;
+
+      if (count >= threshold && !shownEvolutionStages[key]) {
+        setShownEvolutionStages((prev) => ({
+          ...prev,
+          [key]: true
+        }));
+
+        setEvolutionText(`${group.name} 우주 진화!`);
+
+        setTimeout(() => {
+          setEvolutionText(null);
+        }, 2200);
+      }
+    });
+  });
+}, [messages, groups, shownEvolutionStages]);
   const radiusMap = useMemo(() => {
     const next = {};
     groups.forEach((group) => {
@@ -587,6 +612,27 @@ const submitMessage = async () => {
         fontFamily: "Inter, Arial, Apple SD Gothic Neo, Noto Sans KR, sans-serif"
       }}
     >
+{evolutionText && (
+  <div
+    style={{
+      position: "fixed",
+      top: "50%",
+      left: "-120%",
+      transform: "translateY(-50%)",
+      width: "max-content",
+      fontSize: "clamp(48px, 10vw, 160px)",
+      fontWeight: 900,
+      color: "rgba(255,255,255,0.16)",
+      whiteSpace: "nowrap",
+      pointerEvents: "none",
+      zIndex: 9999,
+      textShadow: "0 0 30px rgba(255,255,255,0.18)",
+      animation: "evolutionSlide 2.2s linear forwards"
+    }}
+  >
+    {evolutionText}
+  </div>
+)}
       {stars.map((star) => (
         <div
           key={star.id}
@@ -782,7 +828,7 @@ const glow = getGroupGlow(count);
             color: "rgba(255,255,255,0.82)"
           }}
         >
-          {activeGroup ? `${activeGroup.name} 우주에서 하고 싶은 말` : "다른 행성 찾기"}
+          {activeGroup ? `${activeGroup.name} 우주에서 하고 싶은 말` : "다른 우주 찾기"}
         </div>
 
         <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
@@ -867,6 +913,16 @@ const glow = getGroupGlow(count);
           <div style={{ fontSize: 12, color: "rgba(255,255,255,0.75)" }}>{groupNotice}</div>
         )}
       </div>
+<style jsx global>{`
+  @keyframes evolutionSlide {
+    0% {
+      left: -120%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+`}</style>
     </div>
   );
 }
