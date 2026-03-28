@@ -589,11 +589,7 @@ const submitMessage = async () => {
   }, 20);
 
   setTimeout(() => {
-    setMessages((prev) => ({
-      ...prev,
-      [group.name]: [...(prev[group.name] || []), nextMessage]
-    }));
-    setLaunchingMessage(null);
+        setLaunchingMessage(null);
   }, 720);
 
   const { error } = await supabase.from("messages").insert({
