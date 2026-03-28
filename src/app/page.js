@@ -45,6 +45,7 @@ const GROUP_LIBRARY = [...new Set([
 "MONSTA X",
 "NCT 127",
 "NCT DREAM",
+"NCT WISH",
 "NewJeans",
 "NMIXX",
 "OH MY GIRL",
@@ -242,19 +243,19 @@ function makeOrbitalMessage(raw, radius) {
 }
 
 function getGroupGlow(count) {
-  if (count >= 3000) {
+  if (count >= 1000) {
     return {
       border: "rgba(255, 215, 120, 0.45)",
       shadow: "rgba(255, 215, 120, 0.28)"
     };
   }
-  if (count >= 1000) {
+  if (count >= 500) {
     return {
       border: "rgba(255, 120, 220, 0.38)",
       shadow: "rgba(255, 120, 220, 0.22)"
     };
   }
-  if (count >= 500) {
+  if (count >= 100) {
     return {
       border: "rgba(170, 120, 255, 0.34)",
       shadow: "rgba(170, 120, 255, 0.2)"
