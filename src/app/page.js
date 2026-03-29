@@ -342,8 +342,7 @@ useEffect(() => {
   }, 2200);
 }, [evolutionQueue, evolutionText]);
 
-   [messages, groups, shownEvolutionStages]);
-  const radiusMap = useMemo(() => {
+     const radiusMap = useMemo(() => {
     const next = {};
     groups.forEach((group) => {
       next[group.name] = getDynamicRadius(group.baseRadius, (messages[group.name] || []).length);
