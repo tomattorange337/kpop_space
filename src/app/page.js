@@ -302,11 +302,8 @@ const [shownEvolutionStages, setShownEvolutionStages] = useState({});
     return () => clearTimeout(timeout);
   }, [messages]);
 
-  useEffect(() => {
-    if (!groupNotice) return;
-    const timeout = setTimeout(() => setGroupNotice(""), 1800);
-    return () => clearTimeout(timeout);
-  }, [groupNotice]);
+const [evolutionQueue, setEvolutionQueue] = useState([]);
+
 useEffect(() => {
   const thresholds = [10, 50, 100, 500, 1000];
 
@@ -322,15 +319,30 @@ useEffect(() => {
           [key]: true
         }));
 
-        setEvolutionText(`${group.name} 우주 진화!`);
-
-        setTimeout(() => {
-          setEvolutionText(null);
-        }, 2200);
+        // ❗ 여기 바뀜 (바로 보여주는게 아니라 큐에 넣기)
+        setEvolutionQueue((prev) => [
+          ...prev,
+          `${group.name} 우주 진화!`
+        ]);
       }
     });
   });
-}, [messages, groups, shownEvolutionStages]);
+}, [messages, groups]);
+
+useEffect(() => {
+  if (evolutionQueue.length === 0) return;
+  if (evolutionText) return;
+
+  const next = evolutionQueue[0];
+  setEvolutionText(next);
+
+  setTimeout(() => {
+    setEvolutionText(null);
+    setEvolutionQueue((prev) => prev.slice(1));
+  }, 2200);
+}, [evolutionQueue, evolutionText]);
+
+   [messages, groups, shownEvolutionStages]);
   const radiusMap = useMemo(() => {
     const next = {};
     groups.forEach((group) => {
