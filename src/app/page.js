@@ -3,9 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
 
-
-import { Analytics } from "@vercel/analytics/next"
-
 const GROUP_LIBRARY = [...new Set([
    "2NE1",
 "2PM",
